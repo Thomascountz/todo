@@ -14,9 +14,12 @@ $(function(){
 		});
 	}
 
-	function move(todo, fromList, toList) {
+	function remove(todo, fromList) {
 		let index = todos[fromList].indexOf(todo);
-		todos[fromList].splice(index, 1)[0];
+		return todos[fromList].splice(index, 1)[0];
+	}
+
+	function addTo(todo, toList) {
 		todos[toList].push(todo);
 		save("todos", JSON.stringify(todos));
 	}
@@ -92,12 +95,14 @@ $(function(){
 	$('ul.list-items')
 		.on('click', 'li.in-queue', function(){
 		let todo = $(this)[0].innerText;
-		move(todo, "inQueue", "complete");
+		let newTodo = remove(todo, "inQueue");
+		addTo(newTodo, "complete");
 		$(this).removeClass("in-queue");
 		$(this).addClass("complete");
 	}) .on('click', 'li.complete', function(){
 		let todo = $(this)[0].innerText;
-		move(todo, "complete", "inQueue");
+		let newTodo = remove(todo, "complete")
+		addTo(todo, "inQueue");
 		$(this).removeClass("complete");
 		$(this).addClass("in-queue");
 	}); // end ul click
